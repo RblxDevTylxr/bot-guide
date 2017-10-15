@@ -1,0 +1,23 @@
+{
+  "name": "bot-guide",
+  "version": "1.0.0",
+  "description": "Code for my Discord.js Bot Guide on https://youtube.com/c/eviecodes/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eslachance/bot-guide.git"
+  },
+  "keywords": [],
+  "author": "Evelyne Lachance <eslachance@gmail.com> (http://evie.codes/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eslachance/bot-guide/issues"
+  },
+  "homepage": "https://github.com/eslachance/bot-guide#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
