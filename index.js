@@ -5,11 +5,7 @@ const config = require('./config.json');
 
 const client = new Discord.Client();
 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-});
-
-client.on('message', (message) => {
+const handleMessage = (message) => {
   if (message.author.bot) return;
 
   if (message.content.indexOf(config.prefix) !== 0) return;
@@ -21,13 +17,45 @@ client.on('message', (message) => {
     message.channel.send('Pong...').then((msg) => {
       msg.edit(`Pong! Latency is ${msg.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`);
     });
-  }
+  } else
 
   if (command === 'speak') {
     if (message.author.id !== config.ownerID) return message.reply('Arrooo???');
     message.channel.send(args.join(' '));
     message.delete();
+  } else
+
+  if (command === 'serverinfo') {
+    const embed = new Discord.MessageEmbed()
+      .setDescription(`${message.guild.name}'s Information and Details`)
+      .setThumbnail(message.guild.iconURL())
+      .setFooter(message.guild.owner.user.tag, message.guild.owner.user.avatarURL())
+      .addField('Members', `${message.guild.members.filter(member => member.user.bot).size} bots of ${message.guild.memberCount} members.`)
+      .addField('Channels', `${message.guild.channels.filter(chan => chan.type === 'voice').size} voice / ${message.guild.channels.filter(chan => chan.type === 'text').size} text`)
+      .addField('Roles', message.guild.roles.map(role => role.name).join(', '));
+    message.channel.send({ embed });
   }
-});
+};
+
+const handleGuildCreate = (guild) => {
+  console.log(`I have been added to the guild: ${guild.name}, Owned by: ${guild.owner.user.tag}, with ${guild.memberCount} members.`);
+};
+
+const handleReady = () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+};
+
+const handleGuildMemberAdd = (member) => {
+  console.log(`${member.user.tag} (${member.id}) has joined ${member.guild.name} (${member.guild.id})`);
+  const welcomeChannel = member.guild.channels.find('name', 'welcome');
+  if (welcomeChannel) {
+    welcomeChannel.send(`Please welcome ${member.user.tag} to our wonderful guild!`);
+  }
+};
+
+client.on('message', handleMessage);
+client.on('guildCreate', handleGuildCreate);
+client.on('ready', handleReady);
+client.on('guildMemberAdd', handleGuildMemberAdd);
 
 client.login(config.token);
